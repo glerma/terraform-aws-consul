@@ -3,6 +3,10 @@
 # You must provide a value for each of these parameters.
 # ---------------------------------------------------------------------------------------------------------------------
 
+variable "tags" {
+ type = map(string)
+}
+
 variable "cluster_name" {
   description = "The name of the Consul cluster (e.g. consul-stage). This variable is used to namespace all resources created by this module."
   type        = string
@@ -231,10 +235,10 @@ variable "ssh_port" {
   default     = 22
 }
 
-variable "tags" {
+variable "asg_tags" {
   description = "List of extra tag blocks added to the autoscaling group configuration. Each element in the list is a map containing keys 'key', 'value', and 'propagate_at_launch' mapped to the respective values."
-  type        = map(string)
-  default     = {}
+  type        = list(object({ key : string, value : string, propagate_at_launch : bool }))
+  default     = []
 }
 
 variable "enabled_metrics" {

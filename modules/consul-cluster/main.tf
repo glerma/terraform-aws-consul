@@ -79,10 +79,12 @@ resource "aws_autoscaling_group" "autoscaling_group" {
         value               = var.cluster_tag_value
         propagate_at_launch = true
       },
-      var.tags,
+      var.asg_tags,
     ]
   )
 }
+
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE LAUNCH CONFIGURATION TO DEFINE WHAT RUNS ON EACH INSTANCE IN THE ASG
@@ -149,6 +151,7 @@ resource "aws_security_group" "lc_security_group" {
       "Name" = var.cluster_name
     },
     var.security_group_tags,
+    var.tags
   )
 }
 
