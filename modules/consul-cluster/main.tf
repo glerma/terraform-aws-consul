@@ -7,6 +7,18 @@ terraform {
   required_version = ">= 0.12"
 }
 
+
+
+data "template_file" "user_data_consul" {
+  template = file("${path.module}/templates/user-data-consul.sh")
+
+  vars = {
+    consul_cluster_tag_key   = var.consul_cluster_tag_key
+    consul_cluster_tag_value = var.consul_cluster_name
+  }
+}
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN AUTO SCALING GROUP (ASG) TO RUN CONSUL
 # ---------------------------------------------------------------------------------------------------------------------
