@@ -99,7 +99,7 @@ resource "aws_launch_configuration" "launch_configuration" {
     concat(aws_iam_instance_profile.instance_profile.*.name, [""]),
     0,
   ) : var.iam_instance_profile_name
-  key_name             = tls_private_key.ssh.key_name
+  key_name             = aws_key_pair.generated_key.key_name
 
   security_groups = concat(
     [aws_security_group.lc_security_group.id],

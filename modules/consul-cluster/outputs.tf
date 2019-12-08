@@ -37,4 +37,3 @@ output "cluster_tag_value" {
   value       = var.cluster_tag_value
   description = "This is the tag value used to allow the consul servers to autojoin"
 }
-
