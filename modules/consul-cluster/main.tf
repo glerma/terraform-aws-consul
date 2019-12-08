@@ -8,7 +8,30 @@ terraform {
 }
 
 
+#######################################################
+# Generate an SSH key pair for the vault cluster nodes.
+#######################################################
+resource "tls_private_key" "ssh" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
 
+resource "aws_key_pair" "generated_key" {
+  key_name   = var.ssh_key_name
+  public_key = "${tls_private_key.ssh.public_key_openssh}"
+}
+
+resource "aws_ssm_parameter" "ssh_keys" {
+  name  = "/${var.environment}/consul-ssh-private-key"
+  description = "SSH Private Key for Consul Cluster: ${var.cluster_name}"
+  type  = "SecureString"
+  value = "${tls_private_key.ssh.private_key_pem}"
+}
+
+#######################################################################################################################
+# THE USER DATA SCRIPT THAT WILL RUN ON EACH CONSUL SERVER WHEN IT'S BOOTING
+# This script will configure and start Consul
+#######################################################################################################################
 data "template_file" "user_data_consul" {
   template = file("${path.module}/templates/user-data-consul.sh")
 
@@ -69,14 +92,14 @@ resource "aws_launch_configuration" "launch_configuration" {
   name_prefix   = "${var.cluster_name}-"
   image_id      = var.ami_id
   instance_type = var.instance_type
-  user_data     = var.user_data
+  user_data     = data.template_file.user_data_consul.rendered
   spot_price    = var.spot_price
 
   iam_instance_profile = var.enable_iam_setup ? element(
     concat(aws_iam_instance_profile.instance_profile.*.name, [""]),
     0,
   ) : var.iam_instance_profile_name
-  key_name = var.ssh_key_name
+  key_name             = tls_private_key.ssh.key_name
 
   security_groups = concat(
     [aws_security_group.lc_security_group.id],
