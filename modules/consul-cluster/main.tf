@@ -83,10 +83,7 @@ resource "aws_autoscaling_group" "autoscaling_group" {
     ]
   )
 
-  tags = merge(
-      var.asg_tags,
-      var.tags
-    )
+
   }
 }
 
