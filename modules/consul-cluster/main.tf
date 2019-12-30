@@ -25,7 +25,7 @@ resource "aws_ssm_parameter" "ssh_keys" {
   name  = "/${var.environment}/consul-ssh-private-key"
   description = "SSH Private Key for Consul Cluster: ${var.cluster_name}"
   type  = "SecureString"
-  value = "${tls_private_key.ssh.private_key_pem}"
+  value = tls_private_key.ssh.private_key_pem
 }
 
 #######################################################################################################################
