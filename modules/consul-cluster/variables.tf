@@ -271,4 +271,13 @@ variable "consul_cluster_name" {
   default     = "consul-example"
 }
 
+variable "member_account" {
+  description = "Provide the AWS Organization Member Account ID.  Terraform will assume the role provided int his account for administrative access."
+  type        = string
+}
 
+variable "region" {
+  description = "Enter the region that the provider will operate in."
+  type        = string
+  default     = "us-east-1"
+}
