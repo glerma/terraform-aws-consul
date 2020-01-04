@@ -251,7 +251,7 @@ resource "aws_security_group_rule" "allow_dns_udp_inbound_from_self" {
 
 module "client_security_group_rules" {
   source = "../consul-client-security-group-rules"
-
+  member_account = var.member_account
   security_group_id                    = var.security_group_id
   allowed_inbound_cidr_blocks          = var.allowed_inbound_cidr_blocks
   allowed_inbound_security_group_ids   = var.allowed_inbound_security_group_ids
